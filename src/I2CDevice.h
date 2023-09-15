@@ -260,6 +260,18 @@ class I2CDevice {
       return reinterpret_cast<uintptr_t>(ptr);
     }
 
+    /**
+     * @brief Attempts to detect the presence of a device on the bus.
+     *        Attempts communication on the bus by sending the device
+     *        address.
+     * 
+     * @return bool True if there is an ACK on address transmission
+     */
+    inline bool detect() {
+      this->wire.beginTransmission(dev_address);
+      return (this->wire.endTransmission() == 0);
+    }
+
     protected:
       const uint8_t dev_address; //!< The 7-bit device I2C slave address
       TwoWire& wire; //!< A reference to the TwoWire object that manages hardware transmission
@@ -297,6 +309,17 @@ class HasI2CDevice {
     {
         bus.printBusStatus(printable);
     };
+
+    /**
+     * @brief Attempts to detect the presence of a device on the bus.
+     *        Attempts communication on the bus by sending the device
+     *        address.
+     * 
+     * @return bool True if there is an ACK on address transmission
+     */
+    inline bool detect() {
+      return this->bus.detect();
+    }
   protected:
     I2CDevice bus; //!< The I2C Device object this class manages
 };
